@@ -13,7 +13,7 @@ const getAllAnnouncements = async(req, res) => {
 const addAnnouncement = async(req, res) => {
     const {anncmnt_title, anncmnt_description, anncmnt_image, anncmnt_date, anncmnt_publisher} = req.body;
 
-    if(!anncmnt_title || !anncmnt_description || !anncmnt_image || !anncmnt_publisher){
+    if(!anncmnt_title || !anncmnt_description){
         response.status(400)
         throw new Error("All fields are required")
     };
@@ -76,12 +76,12 @@ const deleteAnnouncement = async (req, res) => {
 
 
 const uploadAnnImage = async(req, res) => {
-    const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
+    const result = await cloudinary.uploader.upload(req.files.anncmnt_image.tempFilePath, {
         use_filename:true,
         folder:'announcement-folder'
     })
 
-    fs.unlinkSync(req.files.image.tempFilePath)
+    fs.unlinkSync(req.files.anncmnt_image.tempFilePath)
 
     return res.status(200).json({image:{src:result.secure_url}})
 }
@@ -104,13 +104,13 @@ const uploadUpdateAnnImage = async (req, res) => {
         console.error("Error deleting existing image from Cloudinary:", error);
     }
 
-    const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
+    const result = await cloudinary.uploader.upload(req.files.anncmnt_image.tempFilePath, {
         use_filename: true,
         folder: 'announcement-folder'
     });
 
 
-    fs.unlinkSync(req.files.image.tempFilePath);
+    fs.unlinkSync(req.files.anncmnt_image.tempFilePath);
 
     return res.status(200).json({ image: { src: result.secure_url } });
 }
