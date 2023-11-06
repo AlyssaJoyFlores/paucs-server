@@ -11,7 +11,7 @@ const getAllAnnouncements = async(req, res) => {
 }
 
 const addAnnouncement = async(req, res) => {
-    const {anncmnt_title, anncmnt_description, anncmnt_image, anncmnt_date, anncmnt_publisher} = req.body;
+    const {anncmnt_title, anncmnt_description, image, anncmnt_date, anncmnt_publisher} = req.body;
 
     if(!anncmnt_title || !anncmnt_description){
         response.status(400)
@@ -22,7 +22,7 @@ const addAnnouncement = async(req, res) => {
     const announcement = await Announcement.create({
         anncmnt_title, 
         anncmnt_description, 
-        anncmnt_image, 
+        image, 
         anncmnt_date, 
         anncmnt_publisher
     });
@@ -60,8 +60,8 @@ const deleteAnnouncement = async (req, res) => {
 
    
     try {
-        if (announcement.anncmnt_image) {
-            const publicId = announcement.anncmnt_image.match(/\/v\d+\/(.+?)\./)[1];
+        if (announcement.image) {
+            const publicId = announcement.image.match(/\/v\d+\/(.+?)\./)[1];
             await cloudinary.uploader.destroy(publicId);
         }
     } catch (error) {
@@ -76,12 +76,12 @@ const deleteAnnouncement = async (req, res) => {
 
 
 const uploadAnnImage = async(req, res) => {
-    const result = await cloudinary.uploader.upload(req.files.anncmnt_image.tempFilePath, {
+    const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
         use_filename:true,
         folder:'announcement-folder'
     })
 
-    fs.unlinkSync(req.files.anncmnt_image.tempFilePath)
+    fs.unlinkSync(req.files.image.tempFilePath)
 
     return res.status(200).json({image:{src:result.secure_url}})
 }
@@ -96,21 +96,21 @@ const uploadUpdateAnnImage = async (req, res) => {
     }
 
     try {
-        if (announcement.anncmnt_image) {
-            const publicId = announcement.anncmnt_image.match(/\/v\d+\/(.+?)\./)[1];
+        if (announcement.image) {
+            const publicId = announcement.image.match(/\/v\d+\/(.+?)\./)[1];
             await cloudinary.uploader.destroy(publicId);
         }
     } catch (error) {
         console.error("Error deleting existing image from Cloudinary:", error);
     }
 
-    const result = await cloudinary.uploader.upload(req.files.anncmnt_image.tempFilePath, {
+    const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
         use_filename: true,
         folder: 'announcement-folder'
     });
 
 
-    fs.unlinkSync(req.files.anncmnt_image.tempFilePath);
+    fs.unlinkSync(req.files.image.tempFilePath);
 
     return res.status(200).json({ image: { src: result.secure_url } });
 }
