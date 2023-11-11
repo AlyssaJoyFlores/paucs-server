@@ -1,20 +1,21 @@
-const { response } = require('express');
 const Announcement = require('../models/announcementModel')
 const asyncHandler = require('express-async-handler')
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs')
 
+// to get all announcements
 const getAllAnnouncements = async(req, res) => {
     const announcements = await Announcement.find().sort({createdAt: -1})
 
     res.status(200).json({announcements})
 }
 
+// to create a new announcement
 const addAnnouncement = async(req, res) => {
     const {anncmnt_title, anncmnt_description, image, anncmnt_date, anncmnt_publisher} = req.body;
 
     if(!anncmnt_title || !anncmnt_description){
-        response.status(400)
+        res.status(400)
         throw new Error("All fields are required")
     };
 
@@ -30,7 +31,7 @@ const addAnnouncement = async(req, res) => {
     res.status(201).json({announcement});
 }
 
-
+// to update announcement
 const updateAnnouncement = async(req, res) => {
     const announcement = await Announcement.findById(req.params.id);
 
@@ -49,6 +50,7 @@ const updateAnnouncement = async(req, res) => {
 }
 
 
+// to delete announcement
 const deleteAnnouncement = async (req, res) => {
 
     const announcement = await Announcement.findById(req.params.id);
@@ -74,7 +76,7 @@ const deleteAnnouncement = async (req, res) => {
 };
 
 
-
+// to upload image in cloudinary
 const uploadAnnImage = async(req, res) => {
     const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
         use_filename:true,
@@ -86,7 +88,7 @@ const uploadAnnImage = async(req, res) => {
     return res.status(200).json({image:{src:result.secure_url}})
 }
 
-
+// to udpate image in cloudinary
 const uploadUpdateAnnImage = async (req, res) => {
   
     const announcement = await Announcement.findById(req.params.id);

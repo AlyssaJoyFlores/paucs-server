@@ -15,8 +15,9 @@ const {
     uploadUpdateAnnImage
 } = require('../controllers/announcementController')
 
+
 // routes
-router.route('/').get(getAllAnnouncements);
+router.route('/getAnnouncements').get(getAllAnnouncements);
 router.route('/uploadImage').post(uploadAnnImage);
 router.route('/addAnnouncement').post(addAnnouncement);
 router.route('/updateAnnouncement/:id').patch(updateAnnouncement);

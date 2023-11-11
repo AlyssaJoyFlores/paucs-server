@@ -5,6 +5,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2
 
+
 // cloudinary
 cloudinary.config({
     cloud_name:process.env.CLOUD_NAME,
@@ -33,6 +34,8 @@ server.use(errorHandler);
 
 // api routes
 server.use('/api/announcements', require('./routes/announcementRouter'));
+server.use('/api/products', require('./routes/productRouter'));
+server.use('/api/orders', require('./routes/orderRouter'));
 
 
 // server port
