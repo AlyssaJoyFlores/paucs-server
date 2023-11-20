@@ -9,12 +9,22 @@ const getAllProducts = async(req, res)=> {
     res.status(200).json({msg: "get all products", getProducts})
 }
 
+const getSingleProduct = asyncHandler(async(req, res) => {
+    const product = await Product.findById(req.params.id)
+    if(!product){
+        res.status(404)
+        throw new Error("Product not found")
+    }
+    res.status(200).json(product)
+})
+
+
 
 const addProduct = async(req, res)=> {
 
     const {prod_department, prod_status, image, prod_name, prod_desc, prod_price, categories} = req.body
 
-    if(!prod_department || !prod_status || !prod_name || !prod_desc || !prod_price){
+    if(!prod_department || !prod_status || !prod_name || !prod_desc || !prod_price || !categories){
         res.status(400)
         throw new Error('All fields are required')
     }
@@ -120,6 +130,7 @@ const updateProdImage = async(req, res)=> {
 
 module.exports = {
     getAllProducts,
+    getSingleProduct,
     addProduct,
     updateProduct,
     deleteProduct,
