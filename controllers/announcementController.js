@@ -78,6 +78,10 @@ const deleteAnnouncement = async (req, res) => {
 
 // to upload image in cloudinary
 const uploadAnnImage = async(req, res) => {
+    if (!req.files || !req.files.image) {
+        return res.status(200).json({ message: 'announcement without image' });
+    }
+
     const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
         use_filename:true,
         folder:'announcement-folder'
@@ -104,6 +108,10 @@ const uploadUpdateAnnImage = async (req, res) => {
         }
     } catch (error) {
         console.error("Error deleting existing image from Cloudinary:", error);
+    }
+
+    if (!req.files || !req.files.image) {
+        return res.status(200).json({ message: 'announcement without image' });
     }
 
     const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
